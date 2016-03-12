@@ -86,5 +86,4 @@
            return (u.match(reg)) ? true : false;
         }
     };
-    $(".wrap").ytSubscribe();
 })(jQuery);
