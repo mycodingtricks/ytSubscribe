@@ -34,33 +34,35 @@
         loadGAPI();
         style();
         return this.each(function(){
-            var self = $(this),
-            iframes = self.find("iframe");
-            if(iframes.length>0){
-             iframes.each(function(){
-                var $iframe = $(this),
-                url = $iframe.attr('src');
-                $iframe.wrap("<div class='ytSubscribe-iframe "+settings.button.theme+"'></div>");
-                console.log(url);
-                if(isYoutubeUrl(url)!==false){
-                    appendButton($iframe);
+            var $this = this;
+            setInterval(function(){
+                var self = $($this);
+                var iframes = self.find("iframe");
+                if(iframes.length>0){
+                 iframes.each(function(){
+                    var $iframe = $(this),
+                    url = $iframe.attr('src');
+                    if(isYoutubeUrl(url)!==false && $iframe.parent().hasClass("ytSubscribe-iframe")!=true){
+                        $iframe.wrap("<div class='ytSubscribe-iframe "+settings.button.theme+"'></div>");
+                        appendButton($iframe);
+                    }
+                    centerElement($iframe);
+                 });
                 }
-               console.log(url+"="+isYoutubeUrl(url));
-             });
-            }
-            console.log(iframes.length);
-            addYoutubeButton();
+                addYoutubeButton();
+            },1000);
         });
-        
         function renderYoutube(){
             $(".ytSubscribe-btn").each(function(){
-               var id = "ytSubscribe-btn-"+randomInt();
-               $(this).attr('id',id);
-               gapi.ytsubscribe.render(id,settings.button);
+               if($(this).html()==""){
+                    var id = "ytSubscribe-btn-"+randomInt();
+                    $(this).attr('id',id);
+                    gapi.ytsubscribe.render(id,settings.button);
+               }
             });
         }
         function style(){
-            $("head").append("<style>.ytSubscribe-iframe{position:relative;background:#F9F9F9}.ytSubscribe-iframe.dark{background:black}.ytSubscribe{box-sizing:border-box;width:190px;height:auto;margin:10px auto;}.ytSubscribe-iframe>iframe{border:0px;}</style>");
+            $("head").append("<style>.ytSubscribe-iframe{position:relative;background:#F9F9F9}.ytSubscribe-iframe.dark{background:black}.ytSubscribe{position:relative;height:100px;width:100%;}.ytSubscribe-iframe>iframe{border:0px;}.ytSubscribe-btn{display:inline-block;width:190px;}.ytSubscribe-inner>*{float:left;}</style>");
         }
         function addYoutubeButton(){
             var loadJs = setInterval(function(){
@@ -76,7 +78,21 @@
             $.getScript('https://apis.google.com/js/platform.js');
         }
         function appendButton(iframe){
-            iframe.after("<div class='ytSubscribe'>"+settings.structure+"</div>");
+            iframe.after("<div class='ytSubscribe'><div class='ytSubscribe-inner'>"+settings.structure+"</div></div>");
+        }
+        function centerElement(iframe){
+            var pr = iframe.parent().find(".ytSubscribe");
+            var prh = pr.innerHeight(),
+                prw = pr.innerWidth();
+                
+            var el = iframe.parent().find(".ytSubscribe-inner");
+            var w = el.innerWidth(),
+                h = el.innerHeight();
+            el.css({
+                position:'absolute',
+                top: ((prh-h)/2)+'px',
+                left: ((prw-w)/2)+'px'
+            });
         }
         function randomInt(){
             return Math.floor(Math.random()*100)+1;
@@ -85,5 +101,5 @@
             var reg = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
            return (u.match(reg)) ? true : false;
         }
-    };
+    }
 })(jQuery);
