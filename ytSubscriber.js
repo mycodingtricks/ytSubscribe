@@ -62,7 +62,7 @@
             });
         }
         function style(){
-            $("head").append("<style>.ytSubscribe-iframe{position:relative;background:#F9F9F9}.ytSubscribe-iframe.dark{background:black}.ytSubscribe{position:relative;height:100px;width:100%;}.ytSubscribe-iframe>iframe{border:0px;}.ytSubscribe-btn{display:inline-block;width:190px;}.ytSubscribe-inner>*{float:left;}</style>");
+            $("head").append("<style>@media (max-width:480px){.ytSubscribe-inner>* {float:none;}}.ytSubscribe-iframe{position:relative;background:#F9F9F9}.ytSubscribe-iframe.dark{background:black}.ytSubscribe{position:relative;height:100px;width:100%;}.ytSubscribe-iframe>iframe{border:0px;}.ytSubscribe-btn{display:inline-block;width:190px;}.ytSubscribe-inner>*{float:left;}</style>");
         }
         function addYoutubeButton(){
             var loadJs = setInterval(function(){
